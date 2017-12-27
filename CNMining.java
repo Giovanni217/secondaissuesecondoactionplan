@@ -494,6 +494,20 @@ public class CNMining {
                     }
     }
     
+    private static ConstraintsManager addVincoli(ConstraintsManager vincoli, Constraint constr){
+        
+        if (constr.isPositiveConstraint()) {
+                            vincoli.positivi.add(constr);
+                        } else {
+
+                            addForbiddenVincoli(vincoli, constr);
+
+
+                            vincoli.negati.add(constr);
+                        }
+        return vincoli;
+    }
+    
     private boolean caricaVincoli(ConstraintsManager vincoli, Settings settings) {
         if (settings.areConstraintsAvailable()) {
             if (settings.constraintsFilename.equals("")) {
@@ -510,18 +524,11 @@ public class CNMining {
                     ObjectArrayList<Constraint> constraints = cp.getConstraints();
                     int constraintsSize = constraints.size();
                     erroreNoInputFile(constraintsSize);
-
+                    Constraint constr = null;
                     for (int i = 0; i < constraintsSize; i++) {
-                        Constraint constr = (Constraint) constraints.get(i);
-                        if (constr.isPositiveConstraint()) {
-                            vincoli.positivi.add(constr);
-                        } else {
-
-                            addForbiddenVincoli(vincoli, constr);
-
-
-                            vincoli.negati.add(constr);
-                        }
+                        constr = (Constraint) constraints.get(i);
+                        vincoli = addVincoli(vincoli, constr);
+                        
                     }
                 }
             }
@@ -2147,6 +2154,19 @@ public class CNMining {
         return new Node(f.getA(), map.get(f.getA()));
     }
 
+    private static void eFP1(String best_pred, ObjectIntOpenHashMap<String> map, Node nz, Graph g, Node y, double[][] m){
+        if (!best_pred.equals("")) {
+                        nz = g.getNode(getKeyByValue(map, map.get(best_pred)), map.get(best_pred));
+                    }
+                        if (nz != null && !g.isConnected(nz, y)) {
+                            m[map.get(best_pred)][y.getID_attivita()] = 1.0D;
+                            g.addEdge(nz, y, false);
+
+                            nz.incr_Outer_degree();
+                            y.incr_Inner_degree();
+                        }
+    }
+    
     public static void eliminaForbidden(Graph g, ObjectArrayList<Forbidden> lista_forbidden_unfolded, ObjectArrayList<Forbidden> lista_forbidden, ObjectIntOpenHashMap<String> map, double[][] m, double[][] csm, ObjectObjectOpenHashMap<String, ObjectArrayList<String>> attivita_tracce, ObjectObjectOpenHashMap<String, ObjectArrayList<String>> traccia_attivita, ObjectArrayList<Constraint> vincoli_positivi, ObjectArrayList<Constraint> vincoli_negati, Graph folded_g, ObjectIntOpenHashMap<String> folded_map) {
         int it = 0;
         int listaForbiddenUnfoldedSize = lista_forbidden_unfolded.size();
@@ -2194,16 +2214,8 @@ public class CNMining {
                     best_succ = eFP2(best_succ, lista_candidati_best_succ, best_unfolded_item, map, csm, x, g, vincoli_negati, folded_g, folded_map, lista_forbidden);
 
                     nz = null;
-                    if (!best_pred.equals("")) {
-                        nz = g.getNode(getKeyByValue(map, map.get(best_pred)), map.get(best_pred));
-                    }
-                        if (nz != null && !g.isConnected(nz, y)) {
-                            m[map.get(best_pred)][y.getID_attivita()] = 1.0D;
-                            g.addEdge(nz, y, false);
-
-                            nz.incr_Outer_degree();
-                            y.incr_Inner_degree();
-                        }
+                    eFP1(best_pred, map, nz, g, y, m);
+                    
                     nw = null;
                     if (!best_succ.equals("")) {
                         nw = g.getNode(getKeyByValue(map, map.get(best_succ)), map.get(best_succ));
