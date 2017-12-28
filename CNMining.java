@@ -1,75 +1,15 @@
 package org.processmining.plugins.cnmining;
 
-import com.carrotsearch.hppc.IntArrayList;
 
-import com.carrotsearch.hppc.IntOpenHashSet;
-import com.carrotsearch.hppc.ObjectArrayList;
-import com.carrotsearch.hppc.ObjectContainer;
-import com.carrotsearch.hppc.ObjectIntOpenHashMap;
-import com.carrotsearch.hppc.ObjectLookupContainer;
-import com.carrotsearch.hppc.ObjectObjectOpenHashMap;
-import com.carrotsearch.hppc.ObjectOpenHashSet;
-import com.carrotsearch.hppc.cursors.IntCursor;
-import com.carrotsearch.hppc.cursors.ObjectCursor;
-import com.fluxicon.slickerbox.components.NiceSlider;
-import com.fluxicon.slickerbox.factory.SlickerFactory;
-
-import java.awt.Color;
 import java.awt.Dimension;
-import java.io.File;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.StandardOpenOption;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import org.deckfour.uitopia.api.event.TaskListener;
-import org.deckfour.xes.extension.std.XConceptExtension;
-import org.deckfour.xes.extension.std.XLifecycleExtension;
-import org.deckfour.xes.extension.std.XTimeExtension;
-import org.deckfour.xes.factory.XFactory;
-import org.deckfour.xes.factory.XFactoryRegistry;
-import org.deckfour.xes.model.XAttribute;
-import org.deckfour.xes.model.XEvent;
-import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
-import org.processmining.contexts.cli.CLIContext;
-import org.processmining.contexts.cli.CLIPluginContext;
-import org.processmining.contexts.uitopia.UIPluginContext;
-import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
-import org.processmining.framework.plugin.annotations.Plugin;
-import org.processmining.framework.util.ui.widgets.ProMPropertiesPanel;
-import org.processmining.models.causalnet.CausalNetAnnotations;
-import org.processmining.models.causalnet.CausalNetAnnotationsConnection;
-import org.processmining.models.connections.GraphLayoutConnection;
-import org.processmining.models.connections.flexiblemodel.FlexEndTaskNodeConnection;
-import org.processmining.models.connections.flexiblemodel.FlexStartTaskNodeConnection;
-import org.processmining.models.flexiblemodel.EndTaskNodesSet;
-import org.processmining.models.flexiblemodel.Flex;
-import org.processmining.models.flexiblemodel.FlexFactory;
-import org.processmining.models.flexiblemodel.FlexNode;
-import org.processmining.models.flexiblemodel.SetFlex;
-import org.processmining.models.flexiblemodel.StartTaskNodesSet;
-import org.processmining.models.graphbased.directed.petrinet.Petrinet;
-import org.processmining.models.graphbased.directed.petrinet.PetrinetNode;
-import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
-import org.processmining.models.graphbased.directed.petrinet.impl.PetrinetFactory;
-import org.processmining.models.jgraph.ProMJGraph;
-import org.processmining.models.jgraph.ProMJGraphVisualizer;
-import org.processmining.models.jgraph.visualization.ProMJGraphPanel;
-import org.processmining.models.semantics.petrinet.Marking;
-import org.processmining.plugins.pnml.Pnml;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 /**
  * @author Utente
